@@ -64,10 +64,10 @@ async function seed() {
 
   console.log('Seed data created successfully!')
   console.log('---')
-  console.log('Admin: admin@example.com / password123')
-  console.log('Owner: owner@example.com / password123')
-  console.log('Agent: agent@example.com / password123')
-  console.log('Customer: customer@example.com / password123')
+  console.log('Admin: sks@gmail.com / 844502')
+  console.log('Owner: owner@example.com / 844502')
+  console.log('Agent: agent@example.com / 844502')
+  console.log('Customer: customer@example.com / 844502')
 
   await AppDataSource.destroy()
 }

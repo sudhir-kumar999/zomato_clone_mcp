@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const trackingController_1 = require("../controllers/trackingController");
+const auth_1 = require("../middleware/auth");
+const roles_1 = require("../middleware/roles");
+const User_1 = require("../entities/User");
+const router = (0, express_1.Router)();
+router.post('/location', auth_1.authenticate, (0, roles_1.authorize)(User_1.UserRole.DELIVERY_AGENT), trackingController_1.updateLocation);
+router.get('/:orderId', auth_1.authenticate, trackingController_1.getTracking);
+exports.default = router;

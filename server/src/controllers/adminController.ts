@@ -1,10 +1,10 @@
 import { Response } from 'express'
+import bcrypt from 'bcryptjs'
 import { AppDataSource } from '../data-source'
 import { User, UserRole } from '../entities/User'
 import { Restaurant } from '../entities/Restaurant'
-import { Order } from '../entities/Order'
+import { Order, PaymentStatus } from '../entities/Order'
 import { AuthRequest } from '../middleware/auth'
-import { MoreThanOrEqual } from 'typeorm'
 
 const userRepo = () => AppDataSource.getRepository(User)
 const restRepo = () => AppDataSource.getRepository(Restaurant)
@@ -68,7 +68,6 @@ export const createDeliveryAgent = async (req: AuthRequest, res: Response) => {
   const existing = await userRepo().findOne({ where: { email } })
   if (existing) return res.status(400).json({ message: 'Email already exists' })
 
-  const bcrypt = require('bcryptjs')
   const hashedPassword = await bcrypt.hash(password, 10)
   const agent = userRepo().create({
     name, email, password: hashedPassword, phone,
@@ -81,7 +80,7 @@ export const createDeliveryAgent = async (req: AuthRequest, res: Response) => {
 
 export const getAgentEarnings = async (req: AuthRequest, res: Response) => {
   const orders = await orderRepo().find({
-    where: { delivery_agent_id: req.params.id, payment_status: 'paid' as any },
+    where: { delivery_agent_id: req.params.id, payment_status: PaymentStatus.PAID },
   })
   const total = orders.reduce((sum, o) => sum + Number(o.total_amount), 0)
   return res.json({ totalEarnings: total, totalDeliveries: orders.length, orders })

@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const menuController_1 = require("../controllers/menuController");
+const auth_1 = require("../middleware/auth");
+const roles_1 = require("../middleware/roles");
+const User_1 = require("../entities/User");
+const router = (0, express_1.Router)();
+router.get('/restaurant/:restaurantId', menuController_1.getByRestaurant);
+router.post('/category', auth_1.authenticate, (0, roles_1.authorize)(User_1.UserRole.RESTAURANT_OWNER), menuController_1.createCategory);
+router.put('/category/:id', auth_1.authenticate, (0, roles_1.authorize)(User_1.UserRole.RESTAURANT_OWNER), menuController_1.updateCategory);
+router.delete('/category/:id', auth_1.authenticate, (0, roles_1.authorize)(User_1.UserRole.RESTAURANT_OWNER), menuController_1.deleteCategory);
+router.post('/item', auth_1.authenticate, (0, roles_1.authorize)(User_1.UserRole.RESTAURANT_OWNER), menuController_1.createItem);
+router.put('/item/:id', auth_1.authenticate, (0, roles_1.authorize)(User_1.UserRole.RESTAURANT_OWNER), menuController_1.updateItem);
+router.delete('/item/:id', auth_1.authenticate, (0, roles_1.authorize)(User_1.UserRole.RESTAURANT_OWNER), menuController_1.deleteItem);
+router.put('/item/:id/toggle-availability', auth_1.authenticate, (0, roles_1.authorize)(User_1.UserRole.RESTAURANT_OWNER), menuController_1.toggleAvailability);
+exports.default = router;

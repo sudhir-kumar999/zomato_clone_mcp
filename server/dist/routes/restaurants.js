@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const restaurantController_1 = require("../controllers/restaurantController");
+const auth_1 = require("../middleware/auth");
+const roles_1 = require("../middleware/roles");
+const User_1 = require("../entities/User");
+const router = (0, express_1.Router)();
+router.get('/', restaurantController_1.getAll);
+router.get('/:id', restaurantController_1.getById);
+router.post('/', auth_1.authenticate, (0, roles_1.authorize)(User_1.UserRole.RESTAURANT_OWNER), restaurantController_1.create);
+router.put('/:id', auth_1.authenticate, (0, roles_1.authorize)(User_1.UserRole.RESTAURANT_OWNER), restaurantController_1.update);
+router.put('/:id/toggle-active', auth_1.authenticate, (0, roles_1.authorize)(User_1.UserRole.RESTAURANT_OWNER, User_1.UserRole.ADMIN), restaurantController_1.toggleActive);
+exports.default = router;

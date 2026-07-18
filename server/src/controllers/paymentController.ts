@@ -2,7 +2,7 @@ import { Response } from 'express'
 import Razorpay from 'razorpay'
 import crypto from 'crypto'
 import { AppDataSource } from '../data-source'
-import { Order } from '../entities/Order'
+import { Order, PaymentStatus } from '../entities/Order'
 import { AuthRequest } from '../middleware/auth'
 
 const razorpay = new Razorpay({
@@ -42,7 +42,7 @@ export const verify = async (req: AuthRequest, res: Response) => {
 
   const order = await orderRepo().findOne({ where: { razorpay_order_id } })
   if (order) {
-    order.payment_status = 'paid' as any
+    order.payment_status = PaymentStatus.PAID
     order.razorpay_payment_id = razorpay_payment_id
     await orderRepo().save(order)
   }

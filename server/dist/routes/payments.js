@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const paymentController_1 = require("../controllers/paymentController");
+const auth_1 = require("../middleware/auth");
+const roles_1 = require("../middleware/roles");
+const User_1 = require("../entities/User");
+const router = (0, express_1.Router)();
+router.post('/create-order', auth_1.authenticate, (0, roles_1.authorize)(User_1.UserRole.CUSTOMER), paymentController_1.createOrder);
+router.post('/verify', auth_1.authenticate, paymentController_1.verify);
+exports.default = router;
