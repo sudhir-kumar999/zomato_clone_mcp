@@ -1,5 +1,15 @@
-import { Box, Typography, Paper, Button, List, ListItem, ListItemText, IconButton, Divider } from '@mui/material'
-import { Add, Remove, Delete } from '@mui/icons-material'
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import Divider from '@mui/material/Divider';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate, Navigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 
@@ -26,10 +36,10 @@ export default function Cart() {
             <ListItem key={item.id} sx={{ px: 0 }}>
               <ListItemText primary={item.name} secondary={`$${Number(item.price).toFixed(2)} each`} />
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <IconButton size="small" onClick={() => updateQuantity(item.id, item.quantity - 1)}><Remove /></IconButton>
+                <IconButton size="small" onClick={() => updateQuantity(item.id, item.quantity - 1)}><RemoveIcon /></IconButton>
                 <Typography>{item.quantity}</Typography>
-                <IconButton size="small" onClick={() => updateQuantity(item.id, item.quantity + 1)}><Add /></IconButton>
-                <IconButton size="small" color="error" onClick={() => removeItem(item.id)}><Delete /></IconButton>
+                <IconButton size="small" onClick={() => updateQuantity(item.id, item.quantity + 1)}><AddIcon /></IconButton>
+                <IconButton size="small" color="error" onClick={() => removeItem(item.id)}><DeleteIcon /></IconButton>
               </Box>
             </ListItem>
           ))}
