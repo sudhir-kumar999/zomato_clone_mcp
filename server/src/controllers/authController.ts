@@ -7,12 +7,18 @@ import { AuthRequest } from '../middleware/auth'
 
 const userRepo = () => AppDataSource.getRepository(User)
 
+const JWT_SECRET = process.env.JWT_SECRET
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required')
+}
+
 const setTokenCookie = (res: Response, userId: string) => {
-  const token = jwt.sign({ id: userId }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' })
+  const token = jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '7d' })
+  const isProduction = process.env.NODE_ENV === 'production'
   res.cookie('token', token, {
     httpOnly: true,
-    secure: false,
-    sameSite: 'lax',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000,
     path: '/',
   })
@@ -54,7 +60,12 @@ export const login = async (req: AuthRequest, res: Response) => {
 }
 
 export const logout = async (_req: AuthRequest, res: Response) => {
-  res.clearCookie('token', { path: '/' })
+  const isProduction = process.env.NODE_ENV === 'production'
+  res.clearCookie('token', {
+    path: '/',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
+  })
   return res.json({ message: 'Logged out' })
 }
 

@@ -15,7 +15,9 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
       return res.status(401).json({ message: 'Authentication required' })
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret') as { id: string }
+    const jwtSecret = process.env.JWT_SECRET
+    if (!jwtSecret) throw new Error('JWT_SECRET not configured')
+    const decoded = jwt.verify(token, jwtSecret) as { id: string }
     const userRepo = AppDataSource.getRepository(User)
     const user = await userRepo.findOne({ where: { id: decoded.id } })
 

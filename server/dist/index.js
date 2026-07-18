@@ -20,12 +20,14 @@ const payments_1 = __importDefault(require("./routes/payments"));
 const tracking_1 = __importDefault(require("./routes/tracking"));
 const admin_1 = __importDefault(require("./routes/admin"));
 const sockets_1 = require("./sockets");
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+const isProduction = process.env.NODE_ENV === 'production';
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
-    cors: { origin: '*', methods: ['GET', 'POST'] },
+    cors: { origin: clientUrl.split(','), methods: ['GET', 'POST'] },
 });
-app.use((0, cors_1.default)({ origin: 'http://localhost:3000', credentials: true }));
+app.use((0, cors_1.default)({ origin: clientUrl.split(','), credentials: true }));
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use('/api/auth', auth_1.default);

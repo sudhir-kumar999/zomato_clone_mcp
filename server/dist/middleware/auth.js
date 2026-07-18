@@ -13,7 +13,10 @@ const authenticate = async (req, res, next) => {
         if (!token) {
             return res.status(401).json({ message: 'Authentication required' });
         }
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || 'secret');
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret)
+            throw new Error('JWT_SECRET not configured');
+        const decoded = jsonwebtoken_1.default.verify(token, jwtSecret);
         const userRepo = data_source_1.AppDataSource.getRepository(User_1.User);
         const user = await userRepo.findOne({ where: { id: decoded.id } });
         if (!user || !user.is_active) {

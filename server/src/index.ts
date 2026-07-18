@@ -18,13 +18,16 @@ import trackingRoutes from './routes/tracking'
 import adminRoutes from './routes/admin'
 import { setupSocket } from './sockets'
 
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000'
+const isProduction = process.env.NODE_ENV === 'production'
+
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server, {
-  cors: { origin: '*', methods: ['GET', 'POST'] },
+  cors: { origin: clientUrl.split(','), methods: ['GET', 'POST'] },
 })
 
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
+app.use(cors({ origin: clientUrl.split(','), credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
 
